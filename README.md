@@ -1,2 +1,2 @@
 # coursera_algorithms_part_1
-The course from coursera "Algorithms part 1"
+Solutions to the course from coursera "Algorithms part 1"

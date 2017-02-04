@@ -1,5 +1,6 @@
-package week_2
+package org.coursera.algorithms.week_2
 
+import org.coursera.algorithms.week_2.RandomizedQueue
 import spock.lang.Specification
 
 class RandomizedQueueSpec extends Specification {

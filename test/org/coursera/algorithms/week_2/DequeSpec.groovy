@@ -1,5 +1,6 @@
-package week_2
+package org.coursera.algorithms.week_2
 
+import org.coursera.algorithms.week_2.Deque
 import spock.lang.Specification
 
 class DequeSpec extends Specification {

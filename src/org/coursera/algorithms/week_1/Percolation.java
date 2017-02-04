@@ -1,4 +1,4 @@
-package week_1;
+package org.coursera.algorithms.week_1;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 

@@ -1,4 +1,4 @@
-package week_2;
+package org.coursera.algorithms.week_2;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

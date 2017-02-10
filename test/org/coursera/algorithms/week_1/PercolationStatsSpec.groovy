@@ -1,5 +1,6 @@
-package week_1
+package org.coursera.algorithms.week_1
 
+import org.coursera.algorithms.week_1.PercolationStats
 import spock.lang.Specification
 import spock.lang.Unroll
 

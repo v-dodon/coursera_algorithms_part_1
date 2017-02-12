@@ -29,7 +29,7 @@ public class BruteCollinearPoints {
     private void checkForDuplicates(Point[] points) {
         for (int i = 0; i < points.length - 1; i++) {
             for (int j = 1; j < points.length; j++) {
-                if(points[i].compareTo(points[j]) == 0){
+                if (points[i].compareTo(points[j]) == 0) {
                     throw new IllegalArgumentException();
                 }
             }
@@ -37,7 +37,7 @@ public class BruteCollinearPoints {
     }
 
     private void checkForNulls(Point[] points) {
-        for (Point point: points) {
+        for (Point point : points) {
             if (point == null) {
                 throw new NullPointerException();
             }
@@ -49,6 +49,6 @@ public class BruteCollinearPoints {
     }       // the number of line segments
 
     public LineSegment[] segments() {
-        return (LineSegment[]) lineSegments.toArray();
+        return lineSegments.toArray(new LineSegment[lineSegments.size()]);
     }          // the line segments
 }

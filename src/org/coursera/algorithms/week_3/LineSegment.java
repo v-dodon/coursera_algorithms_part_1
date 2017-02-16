@@ -1,26 +1,29 @@
+package org.coursera.algorithms.week_3;
+
 /*************************************************************************
- *  Compilation:  javac LineSegment.java
- *  Execution:    none
- *  Dependencies: Point.java
- *
- *  An immutable data type for Line segments in the plane.
- *  For use on Coursera, Algorithms Part I programming assignment.
- *
- *  DO NOT MODIFY THIS CODE.
- *
+ * Compilation:  javac org.coursera.algorithms.week_3.LineSegment.java
+ * Execution:    none
+ * Dependencies: org.coursera.algorithms.week_3.Point.java
+ * <p>
+ * An immutable data type for Line segments in the plane.
+ * For use on Coursera, Algorithms Part I programming assignment.
+ * <p>
+ * DO NOT MODIFY THIS CODE.
  *************************************************************************/
 
 public class LineSegment {
+
     private final Point p;   // one endpoint of this line segment
+
     private final Point q;   // the other endpoint of this line segment
 
     /**
      * Initializes a new line segment.
      *
-     * @param  p one endpoint
-     * @param  q the other endpoint
+     * @param p one endpoint
+     * @param q the other endpoint
      * @throws NullPointerException if either <tt>p</tt> or <tt>q</tt>
-     *         is <tt>null</tt>
+     *                              is <tt>null</tt>
      */
     public LineSegment(Point p, Point q) {
         if (p == null || q == null) {
@@ -29,7 +32,6 @@ public class LineSegment {
         this.p = p;
         this.q = q;
     }
-
 
     /**
      * Draws this line segment to standard draw.

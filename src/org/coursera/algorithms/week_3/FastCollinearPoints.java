@@ -1,7 +1,11 @@
-import javax.sound.sampled.Line;
-import java.util.*;
+package org.coursera.algorithms.week_3;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FastCollinearPoints {
+
     private List<LineSegment> lineSegments = new LinkedList<>();
 
     public FastCollinearPoints(Point[] points) {
@@ -15,20 +19,33 @@ public class FastCollinearPoints {
             Arrays.sort(sortedPoints, point.slopeOrder());
             List<Point> collinear = new LinkedList<>();
             for (int i = 1; i < points.length; i++) {
-                if (point.compareTo(points[i]) == 0) {
-                    continue;
-                }
-                if (point.slopeTo(points[i - 1]) == point.slopeTo(points[i])) {
+                if (Double.doubleToLongBits(point.slopeTo(points[i - 1])) == Double.doubleToLongBits(
+                        point.slopeTo(points[i]))) {
                     collinear.add(points[i]);
-                }else{
-                    if(collinear.size() >= 3){
+                } else {
+                    if (collinear.size() >= 3) {
                         collinear.add(point);
+                        addSegment(collinear);
 
                     }
+                    collinear.clear();
+                    collinear.add(sortedPoints[i]);
                 }
+            }
+            if (collinear.size() >= 3) {
+                collinear.add(point);
+                addSegment(collinear);
             }
         }
     }     // finds all line segments containing 4 or more points
+
+    private void addSegment(List<Point> collinearPoints) {
+        Point[] points = collinearPoints.toArray(new Point[collinearPoints.size()]);
+        LineSegment lineSegment = new LineSegment(points[0], points[points.length - 1]);
+        if (!lineSegments.contains(lineSegment)) {
+            lineSegments.add(lineSegment);
+        }
+    }
 
     public int numberOfSegments() {
         return lineSegments.size();
@@ -40,7 +57,7 @@ public class FastCollinearPoints {
 
     private void checkForDuplicates(Point[] points) {
         for (int i = 0; i < points.length - 1; i++) {
-            for (int j = 1; j < points.length; j++) {
+            for (int j = i + 1; j < points.length; j++) {
                 if (points[i].compareTo(points[j]) == 0) {
                     throw new IllegalArgumentException();
                 }

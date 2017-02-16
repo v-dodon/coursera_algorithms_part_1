@@ -1,8 +1,12 @@
-import java.util.ArrayList;
+package org.coursera.algorithms.week_3;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BruteCollinearPoints {
 
-    private ArrayList<LineSegment> lineSegments = new ArrayList<>();
+    private List<LineSegment> lineSegments = new LinkedList<>();
 
     public BruteCollinearPoints(Point[] points) {
         if (points == null) {
@@ -10,14 +14,17 @@ public class BruteCollinearPoints {
         }
         checkForNulls(points);
         checkForDuplicates(points);
-        for (int p = 0; p < points.length - 3; p++) {
-            for (int q = 1; q < points.length - 2; q++) {
-                for (int r = 2; r < points.length - 1; r++) {
-                    for (int s = 3; s < points.length; s++) {
-                        if (points[s].slopeTo(points[p]) == points[s].slopeTo(points[q]) && points[s].slopeTo(
-                                points[p]) == points[s].slopeTo(points[r]) && points[s].slopeTo(
-                                points[q]) == points[s].slopeTo(points[r])) {
-                            lineSegments.add(new LineSegment(points[s], points[p]));
+        Point[] pointsCopy = Arrays.copyOf(points, points.length);
+        Arrays.sort(pointsCopy);
+        for (int p = 0; p < pointsCopy.length - 3; p++) {
+            for (int q = p + 1; q < pointsCopy.length - 2; q++) {
+                for (int r = q + 1; r < pointsCopy.length - 1; r++) {
+                    for (int s = r + 1; s < pointsCopy.length; s++) {
+                        if (Double.doubleToLongBits(pointsCopy[p].slopeTo(pointsCopy[q])) == Double.doubleToLongBits(
+                                pointsCopy[p].slopeTo(
+                                        pointsCopy[r])) && Double.doubleToLongBits(pointsCopy[p].slopeTo(
+                                pointsCopy[q])) == Double.doubleToLongBits((pointsCopy[p].slopeTo(pointsCopy[s])))) {
+                            lineSegments.add(new LineSegment(pointsCopy[s], pointsCopy[p]));
                         }
                     }
                 }
@@ -28,7 +35,7 @@ public class BruteCollinearPoints {
 
     private void checkForDuplicates(Point[] points) {
         for (int i = 0; i < points.length - 1; i++) {
-            for (int j = 1; j < points.length; j++) {
+            for (int j = i + 1; j < points.length; j++) {
                 if (points[i].compareTo(points[j]) == 0) {
                     throw new IllegalArgumentException();
                 }

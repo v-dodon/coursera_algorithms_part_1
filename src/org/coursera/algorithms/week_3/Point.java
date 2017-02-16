@@ -1,6 +1,6 @@
-/******************************************************************************
- * Compilation:  javac Point.java
- * Execution:    java Point
+package org.coursera.algorithms.week_3; /******************************************************************************
+ * Compilation:  javac org.coursera.algorithms.week_3.Point.java
+ * Execution:    java org.coursera.algorithms.week_3.Point
  * Dependencies: none
  * <p>
  * An immutable data type for points in the plane.
@@ -67,7 +67,7 @@ public class Point implements Comparable<Point> {
         } else if (this.x == that.x) {
             return Double.POSITIVE_INFINITY;
         } else {
-            return (that.y - this.y) / (that.x - this.x);
+            return (that.y - this.y) / (double) (that.x - this.x);
         }
     }
 
@@ -84,9 +84,9 @@ public class Point implements Comparable<Point> {
      * argument point
      */
     public int compareTo(Point that) {
-        if ((that.x > this.x) || (that.y == that.y && that.x > this.x)) {
+        if ((that.y > this.y) || (that.y == this.y && that.x > this.x)) {
             return -1;
-        } else if ((that.x < this.x) || (that.y == that.y && that.x < this.x)) {
+        } else if ((that.y < this.y) || (that.y == this.y && that.x < this.x)) {
             return 1;
         } else {
             return 0;
@@ -123,7 +123,7 @@ public class Point implements Comparable<Point> {
             double slope2 = slopeTo(o2);
             if (slope1 < slope2) {
                 return -1;
-            } else if (slope1 == slope2) {
+            } else if (Double.doubleToLongBits(slope1) == Double.doubleToLongBits(slope2)) {
                 return 0;
             } else {
                 return 1;
@@ -132,7 +132,7 @@ public class Point implements Comparable<Point> {
     }
 
     /**
-     * Unit tests the Point data type.
+     * Unit tests the org.coursera.algorithms.week_3.Point data type.
      */
     public static void main(String[] args) {
         /* YOUR CODE HERE */

@@ -10,7 +10,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class PointSET {
-    private Set<Point2D> tree;
+    private final Set<Point2D> tree;
+
     public PointSET() {
         tree = new TreeSet<>();
     }                               // construct an empty set of points
@@ -34,9 +35,8 @@ public class PointSET {
     }            // does the set contain point p?
 
     public void draw() {
-        for (Point2D point: tree) {
+        for (Point2D point : tree) {
             StdDraw.setPenColor(StdDraw.BLACK);
-            StdDraw.setPenRadius(0.01);
             point.draw();
             StdDraw.setPenColor(StdDraw.RED);
             StdDraw.setPenRadius();
@@ -46,8 +46,8 @@ public class PointSET {
     public Iterable<Point2D> range(RectHV rect) {
         verifyIfNull(rect);
         List<Point2D> points = new ArrayList<>();
-        for (Point2D point: tree) {
-            if(rect.contains(point)){
+        for (Point2D point : tree) {
+            if (rect.contains(point)) {
                 points.add(point);
             }
         }
@@ -58,27 +58,22 @@ public class PointSET {
     public Point2D nearest(Point2D p) {
         verifyIfNull(p);
         Point2D nearestPoint = null;
-        if(tree.isEmpty()){
+        double distance = -1;
+        if (tree.isEmpty()) {
             return null;
         }
-        for (Point2D point: tree) {
-            double distance = -1;
-            if(!p.equals(point)){
-                if (distance == -1 || distance < p.distanceTo(point)){
-                    distance = p.distanceTo(point);
-                    nearestPoint = point;
-                }
+        for (Point2D point : tree) {
+            if ((!p.equals(point)) && (distance == -1 || distance < p.distanceSquaredTo(point))) {
+                distance = p.distanceSquaredTo(point);
+                nearestPoint = point;
             }
         }
         return nearestPoint;
     }             // a nearest neighbor in the set to point p; null if the set is empty
 
-    private void verifyIfNull(Object object){
-        if(object == null){
+    private void verifyIfNull(Object object) {
+        if (object == null) {
             throw new IllegalArgumentException();
         }
     }
-    public static void main(String[] args){
-
-    }                  // unit testing of the methods (optional)
 }

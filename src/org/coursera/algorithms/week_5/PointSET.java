@@ -58,12 +58,12 @@ public class PointSET {
     public Point2D nearest(Point2D p) {
         verifyIfNull(p);
         Point2D nearestPoint = null;
-        double distance = -1;
         if (tree.isEmpty()) {
             return null;
         }
+        double distance = tree.iterator().next().distanceSquaredTo(p);
         for (Point2D point : tree) {
-            if ((!p.equals(point)) && (distance == -1 || distance < p.distanceSquaredTo(point))) {
+            if (distance >= p.distanceSquaredTo(point)) {
                 distance = p.distanceSquaredTo(point);
                 nearestPoint = point;
             }

@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="spock-core-1.0-groovy-2.4">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../spock-core-1.0-groovy-2.4.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

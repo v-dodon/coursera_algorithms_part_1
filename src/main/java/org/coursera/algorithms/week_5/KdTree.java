@@ -10,17 +10,18 @@ public class KdTree {
 
     private Node node;
     private int size;
-    private Point2D nearestPoint;
 
     private static class Node {
         private final Point2D p;      // the point
-        private RectHV rectHV;
+        private final RectHV rectHV;
         private Node lb;        // the left/bottom subtree
         private Node rt;        // the right/top subtree
+        private final boolean isVertical;
 
-        public Node(Point2D p, RectHV rectHV) {
+        public Node(Point2D p, RectHV rectHV, boolean isVertical) {
             this.p = p;
             this.rectHV = rectHV;
+            this.isVertical = isVertical;
         }
     }
 
@@ -33,26 +34,27 @@ public class KdTree {
     }
 
     public void insert(Point2D p) {
-        node = insertPoint(node, p, true, 0.0, 0.0, 1.0, 1.0);
+        verifyIfNull(p);
+        double xmin = node == null ? p.x() : 0.0;
+        node = insertPoint(node, p, true, xmin, 0.0, 1.0, 1.0);
     }
 
     private Node insertPoint(Node n, Point2D point, boolean isVertical, double xmin, double ymin, double xmax, double ymax) {
         if (n == null) {
             size++;
-            return new Node(point, new RectHV(xmin, ymin, xmax, ymax));
-
+            return new Node(point, new RectHV(xmin, ymin, xmax, ymax), isVertical);
         } else if (!n.p.equals(point)) {
-            if (isVertical) {
+            if (n.isVertical) {
                 if (n.p.x() > point.x()) {
-                    n.lb = insertPoint(n.lb, point, !isVertical, xmin, ymin, point.x(), ymax);
+                    n.lb = insertPoint(n.lb, point, !isVertical, xmin, point.y(), n.p.x(), point.y());
                 } else {
-                    n.rt = insertPoint(n.rt, point, !isVertical, point.x(), ymin, xmax, ymax);
+                    n.rt = insertPoint(n.rt, point, !isVertical, n.p.x(), point.y(), xmax, ymax);
                 }
             } else {
                 if (n.p.y() > point.y()) {
-                    n.lb = insertPoint(n.lb, point, !isVertical, xmin, ymin, xmax, point.y());
+                    n.lb = insertPoint(n.lb, point, !isVertical, point.x(), 0.0, xmax, n.p.y());
                 } else {
-                    n.rt = insertPoint(n.rt, point, !isVertical, xmin, point.y(), xmax, ymax);
+                    n.rt = insertPoint(n.rt, point, !isVertical, point.x(), n.p.y(), xmax, 1.0);
                 }
             }
         }
@@ -82,6 +84,7 @@ public class KdTree {
     }
 
     public boolean contains(Point2D p) {
+        verifyIfNull(p);
         return contains(node, p, true);
     }
 
@@ -106,13 +109,29 @@ public class KdTree {
         if (rect.contains(n.p)) {
             pointsInside.add(n.p);
         }
-        if (rect.intersects(n.rectHV)) {
-            pointsInsideRect(n.lb, rect, pointsInside);
-            pointsInsideRect(n.rt, rect, pointsInside);
+        if (n.isVertical) {
+            if (rect.xmax() < n.p.x()) {
+                pointsInsideRect(n.lb, rect, pointsInside);
+            } else {
+                pointsInsideRect(n.rt, rect, pointsInside);
+                if (rect.xmin() < n.p.x()) {
+                    pointsInsideRect(n.lb, rect, pointsInside);
+                }
+            }
+        } else {
+            if (rect.ymax() < n.p.y()) {
+                pointsInsideRect(n.lb, rect, pointsInside);
+            } else {
+                pointsInsideRect(n.rt, rect, pointsInside);
+                if (rect.ymin() < n.p.y()) {
+                    pointsInsideRect(n.lb, rect, pointsInside);
+                }
+            }
         }
     }
 
     public Iterable<Point2D> range(RectHV rect) {
+        verifyIfNull(rect);
         List<Point2D> pointsInside = new LinkedList<>();
         pointsInsideRect(node, rect, pointsInside);
 
@@ -120,23 +139,31 @@ public class KdTree {
     }
 
     public Point2D nearest(Point2D p) {
-        nearestPoint = null;
-        findNearest(node, p, node.p);
-        return nearestPoint;
+        verifyIfNull(p);
+        if (node == null) {
+            return null;
+        }
+        return findNearest(node, p, node.p);
     }
 
-    private void findNearest(Node n, Point2D p, Point2D nearestPointToSelected) {
+    private Point2D findNearest(Node n, Point2D p, Point2D nearestPointToSelected) {
         if (n == null) {
-            return;
+            return nearestPointToSelected;
         }
-        if (n.rt != null && n.rt.p.distanceSquaredTo(p) < nearestPointToSelected.distanceSquaredTo(p)) {
-            nearestPoint = n.rt.p;
-            findNearest(n.rt, p, n.rt.p);
-        } else if (n.lb != null && n.lb.p.distanceSquaredTo(p) < nearestPointToSelected.distanceSquaredTo(p)) {
-            nearestPoint = n.lb.p;
-            findNearest(n.lb, p, n.lb.p);
-        } else if (nearestPoint == null) {
-            nearestPoint = nearestPointToSelected;
+        boolean shouldUpdateNearest = n.p.distanceSquaredTo(p) < nearestPointToSelected.distanceSquaredTo(p);
+        Point2D nearest = shouldUpdateNearest ? n.p : nearestPointToSelected;
+        if (n.rectHV.distanceSquaredTo(p) > nearestPointToSelected.distanceSquaredTo(p)) {
+            return nearestPointToSelected;
+        } else {
+            nearest = findNearest(n.lb, p, nearest);
+            nearest = findNearest(n.rt, p, nearest);
+        }
+        return nearest;
+    }
+
+    private void verifyIfNull(Object object) {
+        if (object == null) {
+            throw new IllegalArgumentException();
         }
     }
 }
